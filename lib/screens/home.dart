@@ -5,10 +5,12 @@ import 'dart:convert';
 import 'dart:async';
 import 'package:http/http.dart' as http;
 import '../models/http_exceptions.dart';
+import './single.dart';
 
 class MyHomePage extends StatefulWidget {
-  const MyHomePage({Key? key, required this.title}) : super(key: key);
-  final String title;
+  const MyHomePage({
+    Key? key,
+  }) : super(key: key);
 
   @override
   State<MyHomePage> createState() => _MyHomePageState();
@@ -40,7 +42,7 @@ class _MyHomePageState extends State<MyHomePage> {
         headers: {
           'Content-Type': 'application/json',
           'x-rapidapi-host': 'tasty.p.rapidapi.com',
-          'x-rapidapi-key': 'b9cbb96bc3mshb418703bc770446p17f6fdjsne8d1a4fb225c'
+          'x-rapidapi-key': '2b7b34d01bmsh2bb90bbaf338c99p12299ejsnd279ad96ad26'
         },
       );
       final responseData = json.decode(response.body);
@@ -61,75 +63,85 @@ class _MyHomePageState extends State<MyHomePage> {
     return ModalProgressHUD(
       inAsyncCall: _isLoading,
       child: Material(
-        child: SafeArea(
-          child: Column(
-            children: [
-              MyAppBar(
-                title: Text(
-                  'Recipe App',
-                  style: Theme.of(context).primaryTextTheme.headline6,
-                ),
+          child: SafeArea(
+        child: Column(
+          children: [
+            MyAppBar(
+              title: Text(
+                'Recipe App',
+                style: Theme.of(context).primaryTextTheme.headline6,
               ),
-              Flexible(
-                child: Container(
-                  width: MediaQuery.of(context).size.width,
-                  height: MediaQuery.of(context).size.height,
-                  margin: const EdgeInsets.all(10.0),
-                  // color: Colors.white,
-                  child: ListView.builder(
-                      itemCount: _recipies.length,
-                      itemBuilder: (context, int index) => Container(
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(10),
-                              color: Colors.white,
+            ),
+            Flexible(
+              child: Container(
+                width: MediaQuery.of(context).size.width,
+                height: MediaQuery.of(context).size.height,
+                margin: const EdgeInsets.all(10.0),
+                // color: Colors.white,
+                child: ListView.builder(
+                  itemCount: _recipies.length,
+                  itemBuilder: (context, int index) => GestureDetector(
+                      onTap: () => {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (ctx) =>
+                                      SingleRecipe(recipe: _recipies[index])),
+                            )
+                          },
+                      child: Container(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10),
+                          color: Colors.white,
+                        ),
+                        margin: const EdgeInsets.all(7),
+                        child: Row(
+                          children: [
+                            Flexible(
+                              child: Container(
+                                height: 150,
+                                margin: const EdgeInsets.all(0.9),
+                                child: ClipRRect(
+                                  borderRadius: const BorderRadius.only(
+                                    topLeft: Radius.circular(8.0),
+                                    topRight: Radius.circular(8.0),
+                                    bottomLeft: Radius.circular(8.0),
+                                    bottomRight: Radius.circular(8.0),
+                                  ),
+                                  child: Image.network(
+                                    _recipies[index]['thumbnail_url'],
+                                    height: 145,
+                                    fit: BoxFit.fill,
+                                  ),
+                                ),
+                              ),
                             ),
-                            margin: const EdgeInsets.all(7),
-                            child: Row(
-                              children: [
-                                Flexible(
-                                  child: Container(
-                                    height: 150,
-                                    margin: const EdgeInsets.all(0.9),
-                                    child: ClipRRect(
-                                      borderRadius: const BorderRadius.only(
-                                        topLeft: Radius.circular(8.0),
-                                        topRight: Radius.circular(8.0),
-                                        bottomLeft: Radius.circular(8.0),
-                                        bottomRight: Radius.circular(8.0),
-                                      ),
-                                      child: Image.network(
-                                        _recipies[index]['thumbnail_url'],
-                                        height: 145,
-                                        fit: BoxFit.fill,
-                                      ),
+                            Expanded(
+                              child: Column(
+                                children: [
+                                  Padding(
+                                    padding: const EdgeInsets.all(20.0),
+                                    child: Text(
+                                      _recipies[index]["name"],
+                                      style: const TextStyle(
+                                          color:
+                                              Color.fromARGB(255, 26, 37, 24),
+                                          fontSize: 20),
                                     ),
                                   ),
-                                ),
-                                Expanded(
-                                  child: Column(
-                                    children: [
-                                      Padding(
-                                        padding: const EdgeInsets.all(20.0),
-                                        child: Text(
-                                          _recipies[index]["name"],
-                                          style: const TextStyle(
-                                              color: Colors.black,
-                                              fontSize: 20),
-                                        ),
-                                      ),
-                                      Text(_recipies[index]["yields"])
-                                    ],
-                                  ),
-                                ),
-                              ],
+                                  Text(_recipies[index]["yields"])
+                                ],
+                              ),
                             ),
-                          )),
+                          ],
+                        ),
+                      )),
                 ),
-              )
-            ],
-          ),
+              ),
+            ),
+          ],
         ),
-      ),
+      )),
     );
   }
 }

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:recipeapp/providers/recipes.dart';
 import './screens/home.dart';
-import 'package:provider/provider.dart';
+import './screens/single.dart';
 
 void main() {
   runApp(const MyApp());
@@ -20,7 +19,7 @@ class MyApp extends StatelessWidget {
         primaryColor: Colors.green,
         brightness: Brightness.dark,
       ),
-      home: const MyHomePage(title: 'Recipe App'),
+      home: const MyHomePage(),
     );
   }
 }
